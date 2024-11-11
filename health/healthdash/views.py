@@ -3,8 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
-
+from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import CustomAuthenticationForm, CustomUserCreationForm
 from .models import usercred
@@ -76,7 +75,7 @@ def inform(request):
             return redirect('login')
     return render(request,'healthdash/credform.html')
 def dashboard(request, username):
-    obj=User.objects.filter(username=username).first()
+    obj=get_object_or_404(User,username=username)
     user=usercred.objects.filter(user=obj).first()
     return render(request,'healthdash/dashboard.html',{'user':user})
 
