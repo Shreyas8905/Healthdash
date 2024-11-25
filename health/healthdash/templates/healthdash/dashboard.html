@@ -63,9 +63,6 @@
             margin-bottom: 15px;
             padding-bottom: 8px;
             border-bottom: 1px solid #dee2e6;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
         .info-item {
@@ -85,73 +82,39 @@
             padding: 8px 0;
         }
 
-        .status-badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            background: #e2e8f0;
-            color: #4a5568;
-        }
-
-        .print-btn {
-            background-color: #4299e1;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: background-color 0.2s;
-        }
-
-        .print-btn:hover {
-            background-color: #3182ce;
-        }
-
-        .icon {
-            width: 20px;
-            height: 20px;
-            fill: #4a5568;
-        }
-
-        .location-section {
+        .location-section, .hospital-section {
             background: #f8f9fa;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
         }
 
-        .location-section h2 {
-            color: #34495e;
-            font-size: 18px;
-            margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #dee2e6;
+        .download-btn {
+            background-color: #38a169;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
         }
 
-        .location-info {
-            color: #2c3e50;
-            font-size: 16px;
-            font-weight: 500;
+        .download-btn:hover {
+            background-color: #2f855a;
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="content">
         <div class="header">
             <h1>Emergency Contact & Health Information</h1>
-            <button class="print-btn">Print Info</button>
+            <button class="download-btn" id="downloadBtn">Download as PDF</button>
         </div>
 
         <div class="info-grid">
             <div class="info-section">
-                <h2>
-                    <svg class="icon" viewBox="0 0 24 24">
-                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                    </svg>
-                    Personal Information
-                </h2>
+                <h2>Personal Information</h2>
                 <div class="info-item">
                     <div class="info-label">Full Name</div>
                     <div class="info-value">{{ user.user.username }}</div>
@@ -163,12 +126,7 @@
             </div>
 
             <div class="info-section">
-                <h2>
-                    <svg class="icon" viewBox="0 0 24 24">
-                        <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
-                    </svg>
-                    Guardian Information
-                </h2>
+                <h2>Guardian Information</h2>
                 <div class="info-item">
                     <div class="info-label">Guardian Name</div>
                     <div class="info-value">{{ user.guardian }}</div>
@@ -181,64 +139,96 @@
         </div>
 
         <div class="info-section">
-            <h2>
-                <svg class="icon" viewBox="0 0 24 24">
-                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 6h-3.5V6.5h3.5V9zm0 2.5h-3.5V11h3.5v.5zm0 2.5h-3.5V13h3.5v1zm-5-5H8.5V6.5h3.5V9zm0 2.5H8.5V11h3.5v.5zm0 2.5H8.5V13h3.5v1zm-5-5H4V6.5h3.5V9zm0 2.5H4V11h3.5v.5zm0 2.5H4V13h3.5v1z"/>
-                </svg>
-                Health Information
-            </h2>
-            <div class="info-grid">
-                <div class="info-item">
-                    <div class="info-label">Health Conditions</div>
-                    <div class="info-value">{{ user.health }}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Blood Group</div>
-                    <div class="info-value">{{ user.bloodgroup }}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Insurance Details</div>
-                    <div class="info-value">{{ user.insurance }}</div>
-                </div>
+            <h2>Health Information</h2>
+            <div class="info-item">
+                <div class="info-label">Health Conditions</div>
+                <div class="info-value">{{ user.health }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Blood Group</div>
+                <div class="info-value">{{ user.bloodgroup }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Insurance Details</div>
+                <div class="info-value">{{ user.insurance }}</div>
             </div>
         </div>
 
-        <!-- Location Section -->
         <div class="location-section">
-            <h2>
-                <svg class="icon" viewBox="0 0 24 24">
-                    <path d="M12 2C8.13 2 5 5.13 5 9c0 4.67 7 11 7 11s7-6.33 7-11c0-3.87-3.13-7-7-7zm0 10c-1.66 0-3-1.34-3-3s1.34-3 3-3s3 1.34 3 3s-1.34 3-3 3z"/>
-                </svg>
-                Location
-            </h2>
-            <div class="location-info" id="userLocation">Loading...</div>
+            <h2>Location</h2>
+            <div id="userLocation">Loading...</div>
         </div>
 
+        <div class="hospital-section">
+            <h2>Nearest Hospital</h2>
+            <div id="nearestHospital">Calculating nearest hospital...</div>
+        </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script>
-        // Get user's location using Geolocation API
+        // Hospital data
+        const hospitals = [
+            { name: "City Hospital", latitude: 40.7128, longitude: -74.0060, link: "https://www.cityhospital.com", phone: "+1 234 567 8900" },
+            { name: "Green Valley Medical Center", latitude: 40.7306, longitude: -73.9352, link: "https://www.greenvalley.com", phone: "+1 345 678 1234" },
+            { name: "Downtown Health Clinic", latitude: 40.7488, longitude: -73.9857, link: "https://www.downtownclinic.com", phone: "+1 456 789 2345" }
+        ];
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+        }
+
         function getLocation() {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    const latitude = position.coords.latitude;
-                    const longitude = position.coords.longitude;
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    const userLat = position.coords.latitude;
+                    const userLon = position.coords.longitude;
 
-                    // Display the location on the page
-                    document.getElementById('userLocation').textContent = 
-                        `Latitude: ${latitude}, Longitude: ${longitude}`;
-                }, function() {
-                    document.getElementById('userLocation').textContent = 'Unable to retrieve location.';
+                    document.getElementById('userLocation').textContent = `Your Location: Latitude ${userLat}, Longitude ${userLon}`;
+
+                    let nearestHospital = null;
+                    let shortestDistance = Infinity;
+
+                    hospitals.forEach(hospital => {
+                        const distance = calculateDistance(userLat, userLon, hospital.latitude, hospital.longitude);
+                        if (distance < shortestDistance) {
+                            shortestDistance = distance;
+                            nearestHospital = hospital;
+                        }
+                    });
+
+                    if (nearestHospital) {
+                        document.getElementById('nearestHospital').innerHTML = `
+                            <strong>${nearestHospital.name}</strong><br>
+                            <strong>Distance:</strong> ${shortestDistance.toFixed(2)} km<br>
+                            <strong>Phone:</strong> <a href="tel:${nearestHospital.phone}">${nearestHospital.phone}</a><br>
+                            <a href="${nearestHospital.link}" target="_blank">Visit Website</a>
+                        `;
+                    }
                 });
             } else {
                 document.getElementById('userLocation').textContent = 'Geolocation is not supported by this browser.';
             }
         }
 
-        // Load the location when the page loads
-        window.onload = function() {
-            getLocation();
-        };
+        // PDF Download
+        document.getElementById('downloadBtn').addEventListener('click', function () {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.text("Emergency Contact & Health Information", 10, 10);
+            const content = document.getElementById('content').innerText;
+            doc.text(content, 10, 20);
+            doc.save("emergency_info.pdf");
+        });
+
+        // Load location
+        window.onload = getLocation;
     </script>
 </body>
 </html>
