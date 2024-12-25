@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
     <style>
@@ -308,5 +308,323 @@
         // Load location
         window.onload = getLocation;
     </script>
+</body>
+</html>
+ -->
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emergency Contact, Health Information, and Accident Detection System</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f5f5f5;
+      padding: 20px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .header {
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #e0e0e0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h1 {
+      color: #2c3e50;
+      font-size: 24px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .info-section {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .info-section h2 {
+      color: #34495e;
+      font-size: 18px;
+      margin-bottom: 15px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    .info-item {
+      margin-bottom: 15px;
+    }
+
+    .info-label {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .info-value {
+      color: #2c3e50;
+      font-size: 16px;
+      font-weight: 500;
+      padding: 8px 0;
+    }
+
+    .location-section, .hospital-section {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .download-btn {
+      background-color: #38a169;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.2s;
+    }
+
+    .download-btn:hover {
+      background-color: #2f855a;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      color: green;
+    }
+
+    #error {
+      margin-top: 20px;
+      font-size: 18px;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="content">
+    <!-- Emergency Contact and Health Information -->
+    <div class="header">
+      <h1>Emergency Contact & Health Information</h1>
+      <button class="download-btn" id="downloadBtn">Download as PDF</button>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-section">
+        <h2>Personal Information</h2>
+        <div class="info-item">
+          <div class="info-label">Full Name</div>
+          <div class="info-value">{{ user.user.username }}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Phone Number</div>
+          <div class="info-value">{{ user.phone }}</div>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>Guardian Information</h2>
+        <div class="info-item">
+          <div class="info-label">Guardian Name</div>
+          <div class="info-value">{{ user.guardian }}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Guardian Phone</div>
+          <div class="info-value">{{ user.guardphn }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>Health Information</h2>
+      <div class="info-item">
+        <div class="info-label">Health Conditions</div>
+        <div class="info-value">{{ user.health }}</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Blood Group</div>
+        <div class="info-value">{{ user.bloodgroup }}</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Insurance Details</div>
+        <div class="info-value">{{ user.insurance }}</div>
+      </div>
+    </div>
+
+    <div class="location-section">
+      <h2>Location</h2>
+      <div id="userLocation">Loading...</div>
+    </div>
+
+    <div class="hospital-section">
+      <h2>Nearest Hospital</h2>
+      <div id="nearestHospital">Calculating nearest hospital...</div>
+    </div>
+
+    <!-- Accident Detection System -->
+    <h1>Accident Detection System</h1>
+    <form id="uploadForm">
+      <input type="file" id="fileInput" accept="image/*">
+      <br><br>
+      <button type="submit">Submit</button>
+    </form>
+    <div id="result"></div>
+    <div id="error"></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+  <script>
+    // Emergency Contact & Health Information Script
+    const hospitals = [
+      {
+        name: "Sagar Hospitals, Kumaraswamy Layout",
+        latitude: 12.90795,
+        longitude: 77.565063,
+        address: "Shavige Malleshwara Hills, Kumaraswamy Layout, Bengaluru, Karnataka 560078",
+        phone: "+91 1234567890",
+        link: "https://www.example.com"
+      },
+      {
+        name: "BGS Gleneagles Global Hospital",
+        latitude: 12.9047,
+        longitude: 77.4942,
+        address: "No. 67, Uttarahalli Road, Kengeri, Bengaluru, Karnataka 560060",
+        phone: "+91 1234567890",
+        link: "https://www.example.com"
+      },
+      {
+        name: "Apollo Specialty Hospital, Jayanagar",
+        latitude: 12.9284,
+        longitude: 77.5782,
+        address: "No. 21, Kanakapura Road, Jayanagar 7th Block, Bengaluru, Karnataka 560078",
+        phone: "+91 1234567890",
+        link: "https://www.example.com"
+      }
+      // Add other hospitals here...
+    ];
+
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+          const userLat = position.coords.latitude;
+          const userLon = position.coords.longitude;
+
+          document.getElementById('userLocation').textContent = `Your Location: Latitude ${userLat}, Longitude ${userLon}`;
+
+          let nearestHospital = null;
+          let shortestDistance = Infinity;
+
+          hospitals.forEach(hospital => {
+            const distance = calculateDistance(userLat, userLon, hospital.latitude, hospital.longitude);
+            if (distance < shortestDistance) {
+              shortestDistance = distance;
+              nearestHospital = hospital;
+            }
+          });
+
+          if (nearestHospital) {
+            document.getElementById('nearestHospital').innerHTML = `
+              <strong>${nearestHospital.name}</strong><br>
+              <strong>Distance:</strong> ${shortestDistance.toFixed(2)} km<br>
+              <strong>Phone:</strong> <a href="tel:${nearestHospital.phone}">${nearestHospital.phone}</a><br>
+              <a href="${nearestHospital.link}" target="_blank">Visit Website</a>
+            `;
+          }
+        });
+      } else {
+        document.getElementById('userLocation').textContent = 'Geolocation is not supported by this browser.';
+      }
+    }
+
+    document.getElementById('downloadBtn').addEventListener('click', function () {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.text("Emergency Contact & Health Information", 10, 10);
+      const content = document.getElementById('content').innerText;
+      doc.text(content, 10, 20);
+      doc.save("emergency_info.pdf");
+    });
+
+    window.onload = getLocation;
+
+    // Accident Detection System Script
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const fileInput = document.getElementById('fileInput');
+      const resultDiv = document.getElementById('result');
+      const errorMsgDiv = document.getElementById('error');
+
+      resultDiv.innerText = '';
+      errorMsgDiv.innerText = '';
+
+      if (fileInput.files.length === 0) {
+        errorMsgDiv.innerText = 'Please select a file.';
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', fileInput.files[0]);
+
+      try {
+        const response = await fetch('http://127.0.0.1:5000/upload', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        resultDiv.innerHTML = `<strong>Prediction:</strong> ${data.class} <br> <strong>Confidence:</strong> ${(data.confidence * 100).toFixed(2)}%`;
+      } catch (error) {
+        console.error('Error:', error);
+        errorMsgDiv.innerText = 'Error occurred while uploading the image.';
+      }
+    });
+  </script>
 </body>
 </html>
