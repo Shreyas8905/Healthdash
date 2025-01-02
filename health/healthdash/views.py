@@ -33,7 +33,7 @@ def login_view(request):
 
             if user is not None:
                 login(request, user)
-                return redirect('inform')
+                return redirect('home')
 
 
     return render(request, 'healthdash/login.html', context)
@@ -79,5 +79,6 @@ def dashboard(request, username):
     user=usercred.objects.filter(user=obj).first()
     return render(request,'healthdash/dashboard.html',{'user':user})
 
-
+def qr(request):
+    return render(request,'healthdash/qr.html')
 

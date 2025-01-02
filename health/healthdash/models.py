@@ -14,3 +14,8 @@ class usercred(models.Model):
     insurance = models.CharField(max_length=40,default=1)
     def __str__(self):
         return self.user.username
+
+class hospital(models.Model):
+    Name = models.CharField(max_length=100, blank=True, null=True)
+    latitude = models.DecimalField(decimal_places=10,max_digits=10)
+    longitude = models.DecimalField(decimal_places=10,max_digits=10)
